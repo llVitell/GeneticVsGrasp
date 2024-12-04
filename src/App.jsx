@@ -14,9 +14,56 @@ const populationSize = 10;
 const generations = 50;
 const mutationRate = 0.2;
 
+const generateItems = (size) =>
+    Array.from({ length: size }, () => ({
+        weight: Math.floor(Math.random() * 30) + 1,
+        value: Math.floor(Math.random() * 200) + 50,
+    }));
+
+const measurePerformance = (algorithm, items, capacity, runs = 5) => {
+    let totalTime = 0;
+    let bestValue = 0;
+
+    for (let i = 0; i < runs; i++) {
+        const start = performance.now();
+        const solution = algorithm(items, capacity);
+        const end = performance.now();
+        totalTime += end - start;
+
+        const totalValue = solution.solution.reduce((sum, selected, index) => {
+            if (selected) return sum + items[index].value;
+            return sum;
+        }, 0);
+
+        if (totalValue > bestValue) bestValue = totalValue;
+    }
+
+    return {
+        avgTime: (totalTime / runs).toFixed(2),
+        bestValue,
+    };
+};
 
 const App = () => {
-    const [result, setResult] = useState(null);
+    const [result, setResult] = useState(null)
+    const [comparison, setComparison] = useState(null)
+    const [compareItems, setCompareItems] = useState()
+
+    const handleComparison = () => {
+        const items = generateItems(compareItems)
+        const graspResults = measurePerformance(graspAlgorithm, items, capacity)
+        const geneticResults = measurePerformance(
+            (items, capacity) => geneticAlgorithm(items, capacity, populationSize, generations, mutationRate),
+            items,
+            capacity
+        );
+
+        setComparison({
+            itemsCount: items.length,
+            grasp: graspResults,
+            genetic: geneticResults,
+        });
+    };
 
     const handleRunGRASP = () => {
         const solution = graspAlgorithm(items, capacity);
@@ -95,9 +142,24 @@ const App = () => {
                             aplicadas al problema de la mochila</span>
 
                         <div className='flex gap-6'>
-                            <button className='py-2 px-4 bg-green-500 w-32 text-white font-medium rounded-lg hover:bg-green-600' onClick={handleRunAlgorithm}>Genetic
+                            <input className='w-72 p-2 rounded-lg border-1 border-solid border-purple-500 mr-3'
+                                   placeholder='Numero de items a comparar'
+                                   value={compareItems}
+                                   onChange={(e) => setCompareItems(e.target.value)}/>
+                            <button
+                                className='py-2 px-4 bg-purple-500 w-32 text-white font-medium rounded-lg hover:bg-purple-600'
+                                onClick={handleComparison}
+                            >
+                                Compare
                             </button>
-                            <button className='py-2 px-4 bg-blue-500 w-32 text-white font-medium rounded-lg hover:bg-blue-600' onClick={handleRunGRASP}>GRASP</button>
+                            <button
+                                className='py-2 px-4 bg-green-500 w-32 text-white font-medium rounded-lg hover:bg-green-600'
+                                onClick={handleRunAlgorithm}>Genetic
+                            </button>
+                            <button
+                                className='py-2 px-4 bg-blue-500 w-32 text-white font-medium rounded-lg hover:bg-blue-600'
+                                onClick={handleRunGRASP}>GRASP
+                            </button>
                         </div>
 
                     </div>
@@ -225,6 +287,24 @@ const App = () => {
                             <p>Valor total: {result.totalValue} $</p>
                             <p>Ratio de utilización: {result.ratioUtilization} %</p>
                             <p>Eficiencia: {result.efficiency} $/kg</p>
+                        </div>
+                    )}
+                    {comparison && (
+                        <div className='mt-6'>
+                            <h2>COMPARACIÓN</h2>
+                            <p>Items: {comparison.itemsCount}</p>
+                            <div className='flex gap-10 mt-4'>
+                                <div>
+                                    <h3>GRASP</h3>
+                                    <p>Mejor valor: {comparison.grasp.bestValue} $</p>
+                                    <p>Tiempo promedio: {comparison.grasp.avgTime} ms</p>
+                                </div>
+                                <div>
+                                    <h3>Algoritmo Genético</h3>
+                                    <p>Mejor valor: {comparison.genetic.bestValue} $</p>
+                                    <p>Tiempo promedio: {comparison.genetic.avgTime} ms</p>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </section>
