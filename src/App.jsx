@@ -291,7 +291,7 @@ const App = () => {
                     )}
                     {comparison && (
                         <div className='mt-6'>
-                            <h2>COMPARACIÓN</h2>
+                            <h2>🎯 COMPARACIÓN</h2>
                             <p>Items: {comparison.itemsCount}</p>
                             <div className='flex gap-10 mt-4'>
                                 <div>
