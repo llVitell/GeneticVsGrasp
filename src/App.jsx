@@ -50,6 +50,7 @@ const App = () => {
     const [compareItems, setCompareItems] = useState()
 
     const handleComparison = () => {
+        setResult(null)
         const items = generateItems(compareItems)
         const graspResults = measurePerformance(graspAlgorithm, items, capacity)
         const geneticResults = measurePerformance(
@@ -66,6 +67,7 @@ const App = () => {
     };
 
     const handleRunGRASP = () => {
+        setComparison(null)
         const solution = graspAlgorithm(items, capacity);
 
         let totalWeight = 0;
@@ -97,6 +99,7 @@ const App = () => {
     };
 
     const handleRunAlgorithm = () => {
+        setComparison(null)
         const solution = geneticAlgorithm(items, capacity, populationSize, generations, mutationRate)
         let totalWeight = 0
         let totalValue = 0
@@ -129,9 +132,9 @@ const App = () => {
     }
 
     return (
-        <main className='flex w-full h-screen justify-center items-center bg-stone-50'>
-            <div className='flex w-full h-full rounded-xl text-lg'>
-                <section className='w-3/5 flex flex-col gap-5 p-8 h-full overflow-y-auto'>
+        <main className='flex h-screen w-full items-center justify-center bg-stone-50'>
+            <div className='flex h-full w-full rounded-xl text-lg'>
+                <section className='flex h-full w-3/5 flex-col gap-5 overflow-y-auto p-8'>
                     <h1 className='text-4xl font-semibold'>Análisis Comparativo: GRASP vs Algoritmo Genético </h1>
                     <div className='flex flex-col gap-3'>
                         <h2 className='text-2xl font-semibold'>
@@ -142,22 +145,24 @@ const App = () => {
                             aplicadas al problema de la mochila</span>
 
                         <div className='flex gap-6'>
-                            <input className='w-72 p-2 rounded-lg border-1 border-solid border-purple-500 mr-3'
+                            <div className='z-0 mr-3 flex items-center justify-center rounded-lg border-2 border-purple-500'>
+                            <input className='w-72 rounded-lg p-2 focus:outline-none'
                                    placeholder='Numero de items a comparar'
                                    value={compareItems}
                                    onChange={(e) => setCompareItems(e.target.value)}/>
+                            </div>
                             <button
-                                className='py-2 px-4 bg-purple-500 w-32 text-white font-medium rounded-lg hover:bg-purple-600'
+                                className='w-32 rounded-lg bg-purple-500 px-4 py-2 font-medium text-white hover:bg-purple-600'
                                 onClick={handleComparison}
                             >
                                 Compare
                             </button>
                             <button
-                                className='py-2 px-4 bg-green-500 w-32 text-white font-medium rounded-lg hover:bg-green-600'
+                                className='w-32 rounded-lg bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600'
                                 onClick={handleRunAlgorithm}>Genetic
                             </button>
                             <button
-                                className='py-2 px-4 bg-blue-500 w-32 text-white font-medium rounded-lg hover:bg-blue-600'
+                                className='w-32 rounded-lg bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600'
                                 onClick={handleRunGRASP}>GRASP
                             </button>
                         </div>
@@ -185,7 +190,7 @@ const App = () => {
                         </div>
                     </div>
                     <div>
-                        <h3 className='text-xl font-semibold mb-3'>Experimentos realizados</h3>
+                        <h3 className='mb-3 text-xl font-semibold'>Experimentos realizados</h3>
                         <div className='flex flex-col ps-6'>
                             <li>Tamaños probados: 50, 100, 200 y 500 items</li>
                             <li>Múltiples ejecuciones por tamaño</li>
@@ -193,7 +198,7 @@ const App = () => {
                         </div>
                     </div>
                         <div>
-                            <h3 className='text-xl font-semibold mb-3'>Calidad de las Soluciones</h3>
+                            <h3 className='mb-3 text-xl font-semibold'>Calidad de las Soluciones</h3>
                             <div className='flex flex-col ps-6'>
                                 <li>GRASP consistentemente encuentra mejores soluciones</li>
                                 <li>Mejora de <span className="highlight">1.2x a 1.4x</span> en valor respecto al
@@ -204,7 +209,7 @@ const App = () => {
                         </div>
 
                     <div>
-                        <h3 className='text-xl font-semibold mb-3'>Tiempo de Ejecución</h3>
+                        <h3 className='mb-3 text-xl font-semibold'>Tiempo de Ejecución</h3>
                         <p className='mb-3'>Problemas pequeños (50-100 items):</p>
                         <div className='flex flex-col ps-6'>
                             <li>GRASP es más rápido</li>
@@ -218,7 +223,7 @@ const App = () => {
                         </div>
 
                         <div>
-                            <h3 className='text-xl font-semibold mb-3'>Escalabilidad</h3>
+                            <h3 className='mb-3 text-xl font-semibold'>Escalabilidad</h3>
                             <p className='mb-2'>Al aumentar el tamaño del problema 10 veces (50 a 500 items):</p>
                             <div className='flex flex-col ps-6'>
                                 <li>Tiempo Genético: aumentó 8.2x(casi
@@ -231,7 +236,7 @@ const App = () => {
                         </div>
 
                     <div>
-                        <h3 className='text-xl font-semibold mb-3'>Trade-offs y Conclusiones</h3>
+                        <h3 className='mb-3 text-xl font-semibold'>Trade-offs y Conclusiones</h3>
                         <p className='mb-3'>GRASP</p>
                         <div className='flex flex-col ps-6'>
                             <li>✅ Mejor calidad de soluciones</li>
@@ -251,7 +256,7 @@ const App = () => {
                     </div>
 
                     <div>
-                        <h3 className='text-xl font-semibold mb-3'>Recomendaciones de Uso</h3>
+                        <h3 className='mb-3 text-xl font-semibold'>Recomendaciones de Uso</h3>
                         <p className='mb-3'>Usar GRASP cuando:</p>
                         <div className='flex flex-col ps-6'>
                             <li>La calidad de la solución es crítica</li>
@@ -266,7 +271,7 @@ const App = () => {
                         </div>
                     </div>
                 </section>
-                <section className='w-2/5 flex flex-col h-full p-8'>
+                <section className='flex h-full w-2/5 flex-col p-8'>
                     {result && (
                         <div>
                         <h2 className='mb-3'>🧬 SOLUCIÓN ENCONTRADA:</h2>
@@ -290,10 +295,10 @@ const App = () => {
                         </div>
                     )}
                     {comparison && (
-                        <div className='mt-6'>
+                        <div>
                             <h2>🎯 COMPARACIÓN</h2>
                             <p>Items: {comparison.itemsCount}</p>
-                            <div className='flex gap-10 mt-4'>
+                            <div className='mt-4 flex gap-10'>
                                 <div>
                                     <h3>GRASP</h3>
                                     <p>Mejor valor: {comparison.grasp.bestValue} $</p>
